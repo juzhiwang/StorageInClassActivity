@@ -1,7 +1,11 @@
 package com.example.networkapp
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -44,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             downloadComic(numberEditText.text.toString())
         }
 
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             titleTextView.text = savedInstanceState.getString(STATE_COMIC_TITLE)
             descriptionTextView.text = savedInstanceState.getString(STATE_COMIC_DESCRIPTION)
             val imageUrl = savedInstanceState.getString(STATE_COMIC_IMAGE_URL)
@@ -54,6 +58,24 @@ class MainActivity : AppCompatActivity() {
             }
         }else{
             loadComicDataFromPreferences()
+        }*/
+
+
+        if(intent?.action == Intent.ACTION_VIEW){
+            intent.data?.path?.run {
+                Log.d("Comic Number",split("/")[0])
+            }
+        }
+
+        findViewById<Button>(R.id.button).setOnClickListener{
+            val intent = Intent(
+                Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
+                Uri.parse("package:${packageName}")
+            )
+            startActivity()
+
+
+
         }
     }
 
@@ -64,6 +86,8 @@ class MainActivity : AppCompatActivity() {
             })
         )
     }
+
+
 
     private fun showComic(comicObject: JSONObject) {
         val title = comicObject.getString("title")
